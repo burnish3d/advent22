@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"sort"
 	"strconv"
 )
 
@@ -32,6 +31,63 @@ func main() {
 	f, err := os.Open("./data/day1")
 	check(err)
 	defer f.Close()
+	blockScanner := bufio.NewScanner(f)
+	blockScanner.Split(ScanBlock)
+	elfCalories := make([]int, 0, 100)
+	for blockScanner.Scan() {
+		lineScanner := bufio.NewScanner((bytes.NewReader(blockScanner.Bytes())))
+		sum := 0
+		for lineScanner.Scan() {
+			// fmt.Print(lineScanner.Text())
+			// fmt.Println(lineScanner.Text())
+			n, err := strconv.Atoi(lineScanner.Text())
+			check(err)
+			sum += n
+		}
+		fmt.Println(blockScanner.Text())
+		fmt.Println("END OF BLOCK")
+		elfCalories = append(elfCalories, sum)
+	}
+
+	// f, err = os.Create("test_data/day1_refactor")
+	// check(err)
+	// for _, val := range elfCalories {
+	// 	f.WriteString(fmt.Sprintf("%d\n", val))
+	// }
+
+}
+
+// for scanning input into blocks that are handled individually
+// modified from https://go.dev/src/bufio/scan.go?s=9745:9823#L280
+func ScanBlock(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+	for i := 0; i < len(data)-1; i++ {
+		// We have a full double newline-terminated block.
+		if data[i] == '\n' && data[i+1] == '\n' {
+			return i + 2, data[0 : i+1], nil
+		}
+	}
+	// If we're at EOF, we have a final, non-terminated block. Return it.
+	if atEOF {
+		// for regularity if the very last line is not newline terminated, then add a newline in
+		// this might be extraneous since the next consumer is another scanner
+		if data[len(data)-1] != '\n' {
+			data = append(data, '\n')
+			return len(data) - 1, data, nil
+		}
+		return len(data), data, nil
+	}
+	// Request more data.
+	return 0, nil, nil
+}
+
+// returns most calories found from day 1 part 1
+func day1() int {
+	f, err := os.Open("./data/day1")
+	check(err)
+	defer f.Close()
 
 	// read the file line by line using scanner
 	scanner := bufio.NewScanner(f)
@@ -51,46 +107,6 @@ func main() {
 			counter += num
 		}
 	}
-	best, loc := maxElem(elfCalories)
-	fmt.Printf("Elf number %d with %d calories is the winner\n", loc+1, best)
-
-	ff, err := os.Create("test_data/day1")
-	check(err)
-	// create the test output for comparing the refactor output with
-	for i := 0; i < len(elfCalories); i++ {
-		ff.WriteString(fmt.Sprintf("%d\n", elfCalories[i]))
-	}
-	sort.Ints(elfCalories)
-	fmt.Printf("calories of top three elves: %d", elfCalories[len(elfCalories)-1]+elfCalories[len(elfCalories)-2]+elfCalories[len(elfCalories)-3])
-}
-
-// for scanning input into blocks that are handled individually
-// modified from https://go.dev/src/bufio/scan.go?s=9745:9823#L280
-func ScanBlock(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	if atEOF && len(data) == 0 {
-		return 0, nil, nil
-	}
-	if i := bytes.IndexAny(data, "\n\n"); i >= 0 {
-		// We have a full double newline-terminated block.
-		return i + 1, dropCR(data[0:i]), nil
-	}
-	// If we're at EOF, we have a final, non-terminated block. Return it.
-	if atEOF {
-		data = dropCR(data)
-		// for regularity if the very last line is not newline terminated, then add a newline in
-		if data[len(data)-1] != '\n' {
-			data = append(data, '\n')
-		}
-		return len(data), data, nil
-	}
-	// Request more data.
-	return 0, nil, nil
-}
-
-// take whole from https://go.dev/src/bufio/scan.go?s=9745:9823#L337
-func dropCR(data []byte) []byte {
-	if len(data) > 0 && data[len(data)-1] == '\r' {
-		return data[0 : len(data)-1]
-	}
-	return data
+	best, _ := maxElem(elfCalories)
+	return best
 }
