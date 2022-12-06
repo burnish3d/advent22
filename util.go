@@ -11,7 +11,7 @@ import (
 
 // returns most calories found from day 1 part 1
 func day1() int {
-	f, err := os.Open("./data/day1")
+	f, err := os.Open("day1")
 	check(err)
 	defer f.Close()
 
@@ -144,7 +144,7 @@ type day2Result struct {
 func day2() day2Result {
 	// find total score if you followed strategy guide
 	// part two: update meaning of second column
-	scanner, fileClose := getScanner("./data/day2")
+	scanner, fileClose := getScanner("day2")
 	defer fileClose()
 	runningTotal := 0
 	runningTotal2 := 0
@@ -166,7 +166,7 @@ func day2() day2Result {
 }
 
 func getScanner(fn string) (*bufio.Scanner, func() error) {
-	f, err := os.Open(fn)
+	f, err := os.Open("./data/" + fn)
 	check(err)
 	scanner := bufio.NewScanner(f)
 	return scanner, f.Close
@@ -188,4 +188,10 @@ func maxElem(e []int) (bestFound, location int) {
 		}
 	}
 	return bestFound, location
+}
+
+func toInt(s string) int {
+	val, err := strconv.Atoi(s)
+	check(err)
+	return val
 }

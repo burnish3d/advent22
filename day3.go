@@ -31,7 +31,7 @@ func findMatches(left, right map[rune]int) []rune {
 }
 
 func day3() Result {
-	scanner, fileCloser := getScanner("./data/day3")
+	scanner, fileCloser := getScanner("day3")
 	defer fileCloser()
 	runningTotal := 0
 	runningTotal2 := 0
