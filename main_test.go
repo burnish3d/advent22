@@ -42,14 +42,20 @@ func TestDay6v2(t *testing.T) {
 	assert.Equal(t, 3613, ret.Part2)
 }
 
+var res Result
+
 func BenchmarkDay6(b *testing.B) {
+	var r Result
 	for i := 0; i < b.N; i++ {
-		day6()
+		r = day6()
 	}
+	res = r
 }
 
 func BenchmarkDay6V2(b *testing.B) {
+	var r Result
 	for i := 0; i < b.N; i++ {
-		day6v2()
+		r = day6v2()
 	}
+	res = r
 }
