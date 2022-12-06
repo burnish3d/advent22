@@ -34,7 +34,19 @@ func day3() Result {
 	scanner, fileCloser := getScanner("./data/day3")
 	defer fileCloser()
 	runningTotal := 0
-	for scanner.Scan() {
+	runningTotal2 := 0
+	groupHolder := [3]string{}
+	for count := 0; scanner.Scan(); count++ { // retrofitting unused for loop fields
+		groupHolder[count%3] = scanner.Text()
+		if count%3 == 2 {
+			l, m, r := toMap(groupHolder[0]), toMap(groupHolder[1]), toMap(groupHolder[2])
+			found := findMatches(l, m)
+			for _, elem := range found {
+				if _, ok := r[elem]; ok {
+					runningTotal2 += toPriority(elem)
+				}
+			}
+		}
 		l := scanner.Text()[0 : len(scanner.Text())/2]
 		r := scanner.Text()[len(scanner.Text())/2 : len(scanner.Text())]
 		lm, rm := toMap(l), toMap(r)
@@ -46,5 +58,5 @@ func day3() Result {
 		}
 
 	}
-	return Result{Part1: runningTotal}
+	return Result{Part1: runningTotal, Part2: runningTotal2}
 }
