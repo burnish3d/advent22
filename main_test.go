@@ -1,35 +1,31 @@
 package main
 
 import (
-	"bufio"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestScanBlocks(t *testing.T) {
+func TestStringStack(t *testing.T) {
+	a := NewStringStack()
+	a.Push("I")
+	a.Push("B")
+	assert.Equal(t, "B", a.Pop())
+	assert.Equal(t, "I", a.Pop())
+}
 
-	test_cases := []string{"./test_data/ScanBlocksTestDataTrailingNewline", "./test_data/ScanBlocksTestDataNoTrailingNewline"}
-	outputs := make([]string, len(test_cases))
-	for i, s := range test_cases {
-		t.Run(s, func(t *testing.T) {
-			f, err := os.Open(s)
-			assert.NoError(t, err)
-			blockScanner := bufio.NewScanner(f)
-			blockScanner.Split(ScanBlock)
-
-			counter := 0
-			for blockScanner.Scan() {
-				counter += 1
-				assert.NoError(t, blockScanner.Err(), "count is %d %s", counter, s)
-
-				outputs[i] += blockScanner.Text()
-			}
-			assert.NoError(t, blockScanner.Err(), "%s", s)
-			// assert.Equal(t, 3, counter, "test data should only have three blocks presents")
-			f.Close()
-		})
-	}
-	assert.Equal(t, outputs[0], outputs[1])
+func TestParseStacks(t *testing.T) {
+	s, c := getScanner("day5")
+	defer c()
+	// yes this is ugly, BUT, it was also easy and checks if I mess up the parser or if the IDE removes trailing white space from the data file again
+	theStacks := ParseStacks(s)
+	assert.Equal(t, theStacks[0].Pop(), "T")
+	assert.Equal(t, theStacks[1].Pop(), "N")
+	assert.Equal(t, theStacks[2].Pop(), "D")
+	assert.Equal(t, theStacks[3].Pop(), "L")
+	assert.Equal(t, theStacks[4].Pop(), "M")
+	assert.Equal(t, theStacks[5].Pop(), "S")
+	assert.Equal(t, theStacks[6].Pop(), "W")
+	assert.Equal(t, theStacks[7].Pop(), "M")
+	assert.Equal(t, theStacks[8].Pop(), "S")
 }

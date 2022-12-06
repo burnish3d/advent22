@@ -195,3 +195,8 @@ func toInt(s string) int {
 	check(err)
 	return val
 }
+
+type Result struct {
+	Part1 interface{}
+	Part2 interface{}
+}

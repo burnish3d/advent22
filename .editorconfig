@@ -1,0 +1,4 @@
+root = true
+
+[./data/*]
+trim_trailing_whitespace = false

@@ -1,10 +1,5 @@
 package main
 
-type Result struct {
-	Part1 int
-	Part2 int
-}
-
 func toPriority(character int32) int {
 	if character >= 'a' {
 		return int(character-'a') + 1
