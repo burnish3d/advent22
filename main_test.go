@@ -29,3 +29,27 @@ func TestParseStacks(t *testing.T) {
 	assert.Equal(t, theStacks[7].Pop(), "M")
 	assert.Equal(t, theStacks[8].Pop(), "S")
 }
+
+func TestDay6(t *testing.T) {
+	ret := day6()
+	assert.Equal(t, 1640, ret.Part1)
+	assert.Equal(t, 3613, ret.Part2)
+}
+
+func TestDay6v2(t *testing.T) {
+	ret := day6v2()
+	assert.Equal(t, 1640, ret.Part1)
+	assert.Equal(t, 3613, ret.Part2)
+}
+
+func BenchmarkDay6(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		day6()
+	}
+}
+
+func BenchmarkDay6V2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		day6v2()
+	}
+}
