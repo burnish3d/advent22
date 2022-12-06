@@ -13,6 +13,10 @@ func (s Section) Contains(r Section) bool {
 	return r.lowerBound >= s.lowerBound && r.upperBound <= s.upperBound
 }
 
+func (s Section) Overlaps(r Section) bool {
+	return (s.lowerBound >= r.lowerBound && s.lowerBound <= r.upperBound) || (r.lowerBound >= s.lowerBound && r.lowerBound <= s.upperBound)
+}
+
 // func (s Section) IsContainedBy(r Section) bool {
 // 	return s.lowerBound >= r.lowerBound && s.upperBound <= r.upperBound
 // }
@@ -29,14 +33,18 @@ func day4() Result {
 	// part one is all about finding how many overlapping sections exist
 	s, c := getScanner("day4")
 	defer c()
+	containsCount := 0
 	overlapCount := 0
 	for s.Scan() {
 		theSplit := strings.Split(s.Text(), ",")
 		ls, rs := NewSection(theSplit[0]), NewSection(theSplit[1])
 		if ls.Contains(rs) || rs.Contains(ls) {
+			containsCount += 1
+		}
+		if ls.Overlaps(rs) {
 			overlapCount += 1
 		}
 	}
 
-	return Result{Part1: overlapCount}
+	return Result{Part1: containsCount, Part2: overlapCount}
 }
