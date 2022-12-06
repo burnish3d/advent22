@@ -1,4 +1,4 @@
-module awesomeProject
+module advent22
 
 go 1.17
 
